@@ -44,86 +44,106 @@ Use the trained model to predict  for a new input value .
 
 ## PROGRAM
 
-### Name: Ravivarman VV
+### Name: Varadaram SK
 
-### Register Number: 212224240133
+### Register Number: 212223040232
 
 ```python
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
+import pandas as pd
+import matplotlib.pyplot as plt
 
-dataset1 = pd.read_csv('DL1.csv')
-X = dataset1[['Input']].values
-y = dataset1[['Output']].values
+# Load dataset
+df = df = pd.read_csv(r"C:\Users\admin\Desktop\Deep learning\Exp-1.csv")    # Change the path if needed
 
-print(X,y)
+# Input and Output
+x = df[["Input"]].values
+y = df[["Output"]].values
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=33)
+# Split data
+xt, xst, yt, yst = train_test_split(
+    x, y, test_size=0.2, random_state=42
+)
 
-scaler = MinMaxScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
+# Scale data
+scale1 = MinMaxScaler()
+scale2 = MinMaxScaler()
 
-X_train_tensor = torch.tensor(X_train, dtype=torch.float32)
-y_train_tensor = torch.tensor(y_train, dtype=torch.float32).view(-1, 1)
-X_test_tensor = torch.tensor(X_test, dtype=torch.float32)
-y_test_tensor = torch.tensor(y_test, dtype=torch.float32).view(-1, 1)
+xt = scale1.fit_transform(xt)
+xst = scale1.transform(xst)
 
-# Name:Ravivarman VV
-# Register Number:21224240133
+yt = scale2.fit_transform(yt)
+yst = scale2.transform(yst)
+
+# Convert to tensors
+xt = torch.FloatTensor(xt)
+xst = torch.FloatTensor(xst)
+yt = torch.FloatTensor(yt)
+yst = torch.FloatTensor(yst)
+
+# Neural Network
 class NeuralNet(nn.Module):
-  def __init__(self):
+    def __init__(self):
         super().__init__()
-        self.fc1=nn.Linear(1,8)
-        self.fc2=nn.Linear(8,1)
-        self.fc3=nn.Linear(1,1)
-        self.relu=nn.ReLU()
-        self.history = {'loss': []}
-  def forward(self,x):
-    x=self.relu(self.fc1(x))
-    x=self.relu(self.fc2(x))
-    x=self.fc3(x)
-    return x
+        self.network = nn.Sequential(
+            nn.Linear(1, 16),
+            nn.ReLU(),
+            nn.Linear(16, 8),
+            nn.ReLU(),
+            nn.Linear(8, 1)
+        )
 
-# Initialize the Model, Loss Function, and Optimizer
-ai_brain=NeuralNet()
+    def forward(self, x):
+        return self.network(x)
+
+# Initialize model
+model = NeuralNet()
 criterion = nn.MSELoss()
-optimizer = optim.RMSprop(ai_brain.parameters(), lr=0.001)
+optimizer = optim.Adam(model.parameters(), lr=0.01)
 
-# Name:Ravivarman VV
-# Register Number:21224240133
-def train_model(ai_brain, X_train, y_train, criterion, optimizer, epochs=2000):
-    for epoch in range(epochs):
-      optimizer.zero_grad()
-      loss=criterion(ai_brain(X_train),y_train)
-      loss.backward()
-      optimizer.step()
-#Append loss inside the loop
-      ai_brain.history['loss'].append(loss.item())
-      if epoch % 200 == 0:
-            print(f'Epoch [{epoch}/{epochs}], Loss: {loss.item():.6f}')
+# Training
+epochs = 1000
+losses = []
 
-train_model(ai_brain, X_train_tensor, y_train_tensor, criterion, optimizer)
+for epoch in range(epochs):
+    optimizer.zero_grad()
+
+    prediction = model(xt)
+    loss = criterion(prediction, yt)
+
+    loss.backward()
+    optimizer.step()
+
+    if epoch % 50 == 0:
+        print(f"Epoch {epoch}/{epochs}, Loss = {loss.item():.6f}")
+        losses.append(loss.item())
+
+# Predict new value
+new = scale1.transform([[16]])
+new = torch.FloatTensor(new)
 
 with torch.no_grad():
-    test_loss = criterion(ai_brain(X_test_tensor), y_test_tensor)
-    print(f'Test Loss: {test_loss.item():.6f}')
-loss_df = pd.DataFrame(ai_brain.history)
+    pred = model(new)
+    pred = scale2.inverse_transform(pred.numpy())
+    print("Predicted Output:", pred[0][0])
 
-import matplotlib.pyplot as plt
-loss_df.plot()
-plt.xlabel("Epochs")
+# Test Loss
+with torch.no_grad():
+    pred_test = model(xst)
+    test_loss = criterion(pred_test, yst)
+    print("Test Loss:", test_loss.item())
+
+# Plot loss
+plt.plot(range(0, epochs, 50), losses)
+plt.xlabel("Epoch")
 plt.ylabel("Loss")
-plt.title("Loss during Training")
+plt.title("Training Loss")
+plt.grid(True)
 plt.show()
-
-X_n1_1 = torch.tensor([[9]], dtype=torch.float32)
-prediction = ai_brain(torch.tensor(scaler.transform(X_n1_1), dtype=torch.float32)).item()
-print(f'Prediction: {prediction}')
 ```
 
 ### Dataset Information
