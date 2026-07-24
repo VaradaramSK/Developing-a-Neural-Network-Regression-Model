@@ -152,10 +152,12 @@ plt.show()
 
 
 ### OUTPUT
-<<img width="766" height="248" alt="image" src="https://github.com/user-attachments/assets/1f8033e9-ac49-4b67-80c6-17b3fe140cf3" />
+<img width="425" height="440" alt="image" src="https://github.com/user-attachments/assets/40f97bbd-2cbf-4ea8-99ba-bb18aca2f020" />
+
 
 ### Training Loss Vs Iteration Plot
-<img width="782" height="568" alt="image" src="https://github.com/user-attachments/assets/a5fa6a9a-6ee1-4d0c-a603-78d2274124d0" />
+<img width="787" height="596" alt="image" src="https://github.com/user-attachments/assets/b0a67747-8f63-428b-aceb-307880ca8034" />
+
 
 
 ### New Sample Data Prediction
