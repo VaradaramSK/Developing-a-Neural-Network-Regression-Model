@@ -161,7 +161,8 @@ plt.show()
 
 
 ### New Sample Data Prediction
-<img width="755" height="44" alt="image" src="https://github.com/user-attachments/assets/f800c4a3-af20-4ca7-8ece-853897ad4e89" />
+<img width="337" height="17" alt="image" src="https://github.com/user-attachments/assets/710ffcbe-21a7-4960-ad82-a7f6b678ab1f" />
+
 
 
 
